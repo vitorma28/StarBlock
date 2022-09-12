@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+		:root {
+			--width-store-: 500px;
+			--height-store-: 400px;
+		}
+		canvas {
+			border: 2px solid gray;
+			background-color: rgb(0, 0, 15);
+		}
+		td {
+			border: 1px solid black;
+			padding: 3px;
+		}
+		#GameDisplay {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+		}
+		.hidden {
+			display: none;
+		}
+		.visible {
+			display: block;
+			background-color: #fff;
+			border: 1px solid #aaa;
+			position: absolute;
+		}
+		#store {
+			width: 570px;
+			height: calc(100% - 2px);
+			left: 0;
+			top: 0;
+		}
+		#help {
+			left: 0;
+			top: 0;
+			width: 500px;
+			height: calc(100% - 2px);
+		}
+		#pause {
+			width: 300px;
+			height: 250px;
+			top: calc(100% / 2 - 125px);
+			left: calc(100% / 2 - 150px);
+		}
+		.leave {
+			width: 100%;
+		}
+	</style>
+    <title>Star Block</title>
+</head>
+<body onload="loaded()">
+    <main translate="no" id="GameDisplay">
+        <canvas id="game" width="600" height="600">
+            <div>
+                <p>
+                    Infelizmente o seu navegador n&atilde;o tem suporte ao canvas, <br>
+                    elemento utilizado para exibir o jogo, portanto, n&atilde;o &eacute; poss&iacute;vel <br>
+                    carreg&aacute;-lo.
+                </p>
+                <p>
+                    Atualize seu navegador para poder jogar.<br>
+                    <a href="https://www.google.com/intl/pt-BR/chrome/">Chrome</a><br>
+                    <a href="https://www.mozilla.org/pt-BR/firefox/new/">FireFox</a><br>
+                    <a href="https://www.microsoft.com/pt-br/edge">Microsoft Edge</a><br>
+                    <a href="https://www.opera.com/pt-br">Opera</a>
+                </p>
+            </div>
+        </canvas>
+        <div>
+            <table>
+                <tr>
+                    <td>Saúde da base:</td>
+                    <td id="heal"></td>
+                </tr>
+                <tr>
+                    <td>Score:</td>
+                    <td id="score"></td>
+                </tr>
+                <tr>
+                    <td>Horda:</td>
+                    <td id="wave"></td>
+                </tr>
+                <tr>
+                    <td>Naves destru&iacute;das:</td>
+                    <td id="ships_destroyed"></td>
+                </tr>
+                <tr>
+                    <td>Dinheiro:</td>
+                    <td id="cash"></td>
+                </tr>
+                <tr>
+                    <td>Super fase:</td>
+                    <td id="superPhase"></td>
+                </tr>
+            </table>
+            <button 
+                onclick="
+                    store(true);
+                "
+            >
+                Loja
+            </button>
+            <button
+                onclick="
+                    help(true);
+                "
+            >
+                Ajuda
+            </button>
+        </div>
+        <div id="help" class="hidden">
+            <button onclick="help(false);" class="leave">Fechar</button>
+            <p>Clique em 'a' e 'd' ou '&lArr;' e '&rArr;' para ir para a esquerda e direita, respectivamente.</p>
+            <p>Clique em 'e' para criar 1 inimigo(n&atilde;o aperte e segure, apenas toque).</p>
+            <p>Clique em 'p' para pausar o jogo(tamb&eacute;m pausa a p&aacute;gina).</p>
+            <p>Clique em 'i' para gerar inimigos autom&aacute;ticamente(clique apenas 1 vez, demora 3s para come&ccidil;ar, cria 1 a cada 3s).</p>
+            <p>Clique e segure em '&dArr;' para ativar o canh&atilde;o de fase.</p>
+            <p>Clique 1 vez em '&uArr;' para dar 1 super tiro.(apenas funciona quando se tem muni&ccidil;&atilde;o).</p>
+            <p>Clique em 'c' para limpar a tela.</p>
+            <p>Clique em 'r' para atirar voando e novamente para desativar(exige mais do computador).</p>
+            <br>
+            <br>
+            <p>1 inimigo destruido = +5 cr&eacute;ditos, +10 de score e +1 nave destru&iacute;da.</p>
+            <p>1 asteroid destruido = +7 cr&eacute;ditos, +15 de score</p>
+            <p>10 naves criadas = +1 horda</p>
+        </div>
+        <div id="store" class="hidden">
+            <button onclick="store(false);" class="leave">Sair</button>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>Produto</td>
+                        <td>Pre&ccidil;o</td>
+                        <td>Quantidade por compra</td>
+                        <td>Comprar</td>
+                    </tr>
+                    <tr>
+                        <td>Muni&ccidil;&atilde;o de super canh&atilde;o de fase</td>
+                        <td>$25.00</td>
+                        <td>5</td>
+                        <td>
+                            <button id="armorPhase">Comprar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Saúde</td>
+                        <td>$10.00</td>
+                        <td>20</td>
+                        <td>
+                            <button id="health">Comprar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="pause" class="hidden">
+            <div
+                style="
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                "
+            >
+                <h3>O jogo est&aacute; pausado.</h3>
+                <br>
+                <button id="stopShipSpawn">Pausar a cria&ccidil;&atilde;o de naves e asteroides?(clique para sim)</button>
+                <button 
+                    class="leave"
+                    id="unpause"
+                    style="
+                        margin-top: 100px;
+                    "
+                >
+                    Retomar
+                </button>
+            </div>
+        </div>
+    </main>
+	<script>
+		let pauseVar = false;
+		function loaded()
+		{
+			
+			
+			const canvas = document.getElementById("game");
+			let heal = document.getElementById("heal"),
+				scor = document.getElementById("score"),
+				gameWave = document.getElementById("wave"),
+				enemyD = document.getElementById("ships_destroyed"),
+				cash = document.getElementById("cash"),
+				superPhase = document.getElementById("superPhase");
+
+			let game = canvas.getContext("2d");
+			game.clearRect(0, 0, 600, 600);
+
+			let x = 300,
+				y = 530,
+				d = 10,
+				rad = Math.PI / 180,
+				baseHealth = 200,
+				score = 0,
+				wave = 1,
+				ed = 0,
+				gover = false,
+				money = 0,
+				armorSPh = 0,
+				shooting = false,
+				repeatShoot = false;
+			heal.innerHTML = baseHealth;
+
+			function ship()
+			{
+				game.beginPath();
+
+                game.arc(x, y, 20, -210 * rad, 30 * rad, false);// 42 de diametro total
+            
+                game.fillStyle = "gray";
+                game.lineWidth = 1;
+                game.strokeStyle = "white";
+            
+                game.fill();
+                game.stroke();
+				if(x > 600)
+				{
+					x = 1;
+					ship();
+				}
+				else if(x < 0)
+				{
+					x = 599;
+					ship();
+				}
+			}
+
+			class Bullet
+			{
+				constructor(x1, y1)
+				{
+					this.x = x1;
+					this.y = y1;
+				}
+
+				shootT1()
+				{
+					game.beginPath();
+
+					game.moveTo(this.x, this.y - 21);
+					game.lineTo(this.x, 0);
+					game.lineWidth = 2;
+					game.strokeStyle = "red";
+
+					game.stroke();
+					setTimeout(
+						() =>
+						{
+							game.clearRect(this.x - 1, 0, 2, 509)
+							ship();
+						},
+						15
+					);
+				}
+
+				shootT2()
+				{
+					game.beginPath();
+
+					game.moveTo(this.x, this.y - 21);
+					game.lineTo(this.x, 0);
+					game.lineWidth = 2;
+					game.strokeStyle = "yellow";
+
+					game.stroke();
+					setTimeout(
+						() =>
+						{
+							game.clearRect(this.x - 1, 0, 2, 509)
+							ship();
+						},
+						15
+					);
+				}
+			}
+
+			class EnemyShip
+			{
+				constructor(x1, y1)
+				{
+					this.x = x1;
+					this.y = y1;
+					this.health = 100;
+				}
+
+				go()
+				{
+					let posx = this.x, posy = this.y, health = this.health, enemysht;
+					let exp = this.explode;
+					function gameover()
+					{
+						if(gover == true)
+						{
+							setTimeout(
+								() =>
+								{
+									alert("Você perdeu!\n\nScore: " + score + "\nHordas suportadas: " + parseInt(wave) + "\nInimigos destruidos: " + parseInt(ed));
+									location.reload();
+								},
+								1000
+							);
+						}
+					}
+					function shipe()
+					{
+						if(health > 0)
+						{
+							if(posy < 579)
+							{
+								setTimeout(
+									() =>
+									{
+										if(!pauseVar)
+										{
+											game.clearRect(posx - 32, posy - 30, 60, 60);
+											ship();
+
+											posy += d - 1;
+
+											clearInterval(enemysht);
+											if(repeatShoot)
+											{
+												enemysht = setInterval(
+													() =>
+													{
+														if(posx >= x - 21 && posx <= x + 21 && posy < y && repeatShoot && shooting)
+														{
+															health -= 1;
+														}
+													},
+													10
+												);
+											}
+											
+
+											if(baseHealth <= 0)
+											{
+												posy = 580;
+												gover = true;
+												gameover();
+												exp(posx, posy);
+											}
+
+											game.beginPath();
+
+											game.arc(posx, posy, 20, -30 * rad, 210 * rad, false);// 42 de diametro total
+										
+											game.fillStyle = "green";
+											game.lineWidth = 1;
+											game.strokeStyle = "white";
+										
+											game.fill();
+											game.stroke();
+										}
+											
+										shipe();
+									},
+									500 - (wave * 12)
+								);
+							}
+							else
+							{
+								baseHealth -= health;
+								exp(posx, posy);
+							}
+						}
+						else
+						{
+							score += 10;
+							money += 5;
+							ed += 1;
+							exp(posx, posy);
+						}
+					}
+					function colision()
+					{
+						if(health > 0)
+						{
+							setTimeout(
+								() =>
+								{
+									if(posy >= y - 40 && posy < y + 20 && posx >= x - 35 && posx <= x + 35 && !pauseVar)
+									{
+										health -= 20;
+									}
+									colision();
+								},
+								500
+							);
+						}
+						else
+						{
+							exp(posx, posy);
+						}
+					}
+
+					document.addEventListener("keydown", shoot);
+					document.addEventListener("keyup", shoot2);
+
+					function shoot(e)
+					{
+						if(e.code == "ArrowDown" && !repeatShoot && !pauseVar)
+						{
+							if(posx >= x - 21 && posx <= x + 21 && posy < y)
+							{
+								health -= 5;
+							}
+						}
+					}
+					function shoot2(e)
+					{
+						if(e.code == "ArrowUp" && armorSPh > 0 && !pauseVar)
+						{
+							if(posx >= x - 21 && posx <= x + 21 && posy < y)
+							{
+								health -= 100;
+							}
+						}
+					}
+
+					colision();
+					shipe();
+				}
+
+				explode(x2, y2)
+				{
+					setTimeout(
+						() =>
+						{
+							game.clearRect(x2 - 32, y2 - 30, 62, 60);
+						},
+						50
+					);
+					ship();
+					scor.innerHTML = score;
+					heal.innerHTML = baseHealth;
+					enemyD.innerHTML = parseInt(ed);
+					gameWave.innerHTML = parseInt(wave);
+					cash.innerHTML = `$${money.toFixed(2)}`;
+					/*
+					setTimeout(
+						() =>
+						{
+							let animation = setTimeout(animat, 150), frame = 1;// frame min: 1 e max: 4
+
+							function animat()
+							{
+								game.clearRect(x2 - 32, y2 - 30, 60, 60);
+								let img = new Image(42, 42);
+								switch (frame) {
+									case 1:
+										img.src = "./img/explosion/spaceship/NaveInimigaF1.png";
+										break;
+									case 2:
+										img.src = "./img/explosion/spaceship/NaveInimigaF2.png";
+										break;
+									case 3:
+										img.src = "./img/explosion/spaceship/NaveInimigaF3.png";
+										break;
+									case 4:
+										img.src = "./img/explosion/spaceship/NaveInimigaF4.png";
+										break;
+										
+								
+									default:
+										clearTimeout(animation);
+										break;
+								}
+								img.onload = () =>
+								{
+									game.drawImage(
+										img,
+										x2 - 21, y2 - 30
+									);
+								}
+								if(frame <= 4)
+								{
+									if(frame == 4)
+									{
+										setTimeout(
+											() =>
+											{
+												game.clearRect(x2 - 32, y2 - 30, 62, 60);
+											},
+											300
+										)
+									}
+									frame++;
+									setTimeout(animat, 150);
+								}
+							}
+						},
+						50
+					);
+					*/
+				}
+
+			}
+
+			class Asteroid
+			{
+				constructor(x1, y1)
+				{
+					this.x = x1;
+					this.y = y1;
+					this.h = 200;
+				}
+
+				go()
+				{
+					let posx = this.x,
+						posy = this.y,
+						health = this.h,
+						enemysht,
+						exp = this.explode;
+					function fly()
+					{
+						if(health > 0)
+						{
+							if(posy < 579)
+							{
+								setTimeout(
+									() =>
+									{
+										if(!pauseVar)
+										{
+											game.clearRect(posx - 32, posy - 32, 75, 65);
+											ship();
+
+											game.beginPath();
+
+											game.arc(posx, posy, 20, 0 * rad, 360 * rad, false);// 42 de diametro total
+										
+											game.fillStyle = "darkgray";
+											game.lineWidth = 1;
+											game.strokeStyle = "white";
+										
+											game.fill();
+											game.stroke();
+											
+
+											clearInterval(enemysht);
+											if(repeatShoot)
+											{
+												enemysht = setInterval(
+													() =>
+													{
+														if(posx >= x - 21 && posx <= x + 21 && posy < y && repeatShoot && shooting)
+														{
+															health -= 1;
+														}
+													},
+													10
+												);
+											}
+
+											posy += d - 3;
+										}
+
+										fly();
+									},
+									1000
+								);
+							}
+							else
+							{
+								baseHealth -= health;
+								exp(posx, posy);
+							}
+						}
+						else
+						{
+							score += 15;
+							money += 7;
+							exp(posx, posy);
+						}
+					}
+					document.addEventListener("keydown", shoot);
+					document.addEventListener("keyup", shoot2);
+
+					function shoot(key)
+					{
+						if(key.code == "ArrowDown" && !pauseVar)
+						{
+							if(posx >= x - 21 && posx <= x + 21 && posy < y)
+							{
+								health -= 5;
+							}
+						}
+					}
+					function shoot2(key)
+					{
+						if(key.code == "ArrowUp" && armorSPh > 0 && !pauseVar)
+						{
+							if(posx >= x - 21 && posx <= x + 21 && posy < y)
+							{
+								health -= 100;
+							}
+						}
+					}
+					fly();
+				}
+
+				explode(x2, y2)
+				{
+					setTimeout(
+						() =>
+						{
+							game.clearRect(x2 - 32, y2 - 32, 75, 75);
+						},
+						50
+					);
+					ship();
+					scor.innerHTML = score;
+					heal.innerHTML = baseHealth;
+					enemyD.innerHTML = parseInt(ed);
+					gameWave.innerHTML = parseInt(wave);
+					cash.innerHTML = `$${money.toFixed(2)}`;
+					/*
+					setTimeout(
+						() =>
+						{
+							let animation = setTimeout(animat, 150), frame = 1;// frame min: 1 e max: 4
+
+							function animat()
+							{
+								let img = new Image(42, 42);
+								switch (frame) {
+									case 1:
+										img.src = "./img/explosion/asteroid/explosaoF1.png";
+										break;
+									case 2:
+										img.src = "./img/explosion/asteroid/explosaoF2.png";
+										break;
+									case 3:
+										img.src = "./img/explosion/asteroid/explosaoF3.png";
+										break;
+									case 4:
+										img.src = "./img/explosion/asteroid/explosaoF4.png";
+										break;
+										
+								
+									default:
+										clearTimeout(animation);
+										break;
+								}
+								img.onload = () =>
+								{
+									game.drawImage(
+										img,
+										x2 - 21, y2 - 30
+									);
+								}
+								if(frame <= 4)
+								{
+									if(frame == 4)
+									{
+										setTimeout(
+											() =>
+											{
+												game.clearRect(x2 - 32, y2 - 30, 62, 60);
+											},
+											300
+										)
+									}
+									frame++;
+									setTimeout(animat, 150);
+								}
+							}
+						},
+						50
+					);
+					*/
+				}
+			}
+
+			ship();
+			let enemySpawn, asteroidSpawn, shootLoop;
+
+			document.addEventListener("keydown", eventKBD);
+
+			document.getElementById("unpause").addEventListener(
+				"click",
+				(click) =>
+				{
+					pauseVar = false;
+					pause(false);
+				}
+			);
+
+			document.addEventListener(
+				"keyup",
+				(key) =>
+				{
+					if(key.code == "ArrowUp" && armorSPh > 0 && !pauseVar)
+					{
+						armorSPh -= 1;
+						superPhase.innerHTML = armorSPh;
+						ship();
+						let b = new Bullet(x, y);
+						b.shootT2();
+					}
+					else if(key.code == "ArrowDown")
+					{
+						shooting = false;
+					}
+					else if(key.code == "KeyR")
+					{
+						if(repeatShoot)
+						{
+							repeatShoot = false;
+							clearInterval(shootLoop)
+						}
+						else
+						{
+							repeatShoot = true;
+							shootLoop = setInterval(shootRpt, 10)
+						}
+					}
+				}
+			);
+			function shootRpt()
+			{
+				if(shooting)
+				{
+					game.clearRect(x - 32, y - 30, 60, 60);
+					ship();
+					let b = new Bullet(x, y);
+					b.shootT1();
+				}
+			}
+
+			function eventKBD(key)
+			{
+				if((key.code == "KeyA" || key.code == "ArrowLeft") && !pauseVar)
+				{
+					x -= d;
+					game.clearRect(x - 30, y - 30, 65, 65);
+					ship();
+				}
+				else if((key.code == "KeyD" || key.code == "ArrowRight") && !pauseVar)
+				{
+					x += d;
+					game.clearRect(x - 32, y - 30, 65, 65);
+					ship();
+				}
+				else if(key.code == "ArrowDown" && !pauseVar)
+				{
+					if(repeatShoot)
+					{
+						shooting = true;
+					}
+					else
+					{
+						game.clearRect(x - 32, y - 30, 60, 60);
+						ship();
+						let b = new Bullet(x, y);
+						b.shootT1();
+					}
+				}
+				else if(key.code == "KeyC" && !pauseVar)
+				{
+					game.clearRect(0, 0, 600, 600);
+					ship();
+				}
+				else if(key.code == "KeyE" && !pauseVar)
+				{
+					ship();
+					let e = new EnemyShip((40 + Math.random() * (560 - 40)), 50), a = new Asteroid((40 + Math.random() * (560 - 40)), 50);
+					e.go();
+					a.go()
+					wave += 0.1;
+				}
+				else if(key.code == "KeyI" && !pauseVar)
+				{
+					clearInterval(enemySpawn);
+					clearInterval(asteroidSpawn);
+					enemySpawn = setInterval(
+						() =>
+						{
+							if(!pauseVar)
+							{
+								let enemy = new EnemyShip((40 + Math.random() * (560 - 40)), 50);
+								enemy.go();
+								wave += 0.1;
+							}
+						},
+						3000
+					);
+					asteroidSpawn = setInterval(
+						() =>
+						{
+							if(!pauseVar)
+							{
+								let asteroid = new Asteroid((40 + Math.random() * (560 - 40)), 50);
+								asteroid.go();
+							}
+						},
+						7500
+					);
+				}
+				else if(key.code == "KeyP" && !pauseVar)
+				{
+					pause(true);
+					pauseVar = true;
+				}
+			}
+
+			heal.innerHTML = baseHealth;
+			scor.innerHTML = score;
+			enemyD.innerHTML = parseInt(ed);
+			gameWave.innerHTML = parseInt(wave);
+			cash.innerHTML = `$${money.toFixed(2)}`;
+			superPhase.innerHTML = armorSPh;
+
+			document.getElementById("health").addEventListener(
+				"click",
+				(click) =>
+				{
+					if(money >= 10)
+					{
+						money -= 10;
+						baseHealth += 20;
+						heal.innerHTML = baseHealth;
+						cash.innerHTML = `$${money.toFixed(2)}`;
+					}
+					else
+					{
+						alert("Você não tem dinheiro suficiente.")
+					}
+				}
+			);
+			document.getElementById("armorPhase").addEventListener(
+				"click",
+				(click) =>
+				{
+					if(money >= 25)
+					{
+						money -= 25;
+						armorSPh += 5;
+						superPhase.innerHTML = armorSPh;
+						cash.innerHTML = `$${money.toFixed(2)}`;
+					}
+					else
+					{
+						alert("Você não tem dinheiro suficiente.")
+					}
+				}
+			);
+			document.getElementById("stopShipSpawn").addEventListener(
+				"click",
+				(click) =>
+				{
+					clearInterval(enemySpawn);
+					clearInterval(asteroidSpawn);
+				}
+			);
+
+
+		}
+		function store(show)
+		{
+			let store_ = document.getElementById("store");
+			if(show)
+			{
+				store_.classList.remove("hidden");
+				store_.classList.add("visible");
+			}
+			else
+			{
+				store_.classList.add("hidden");
+				store_.classList.remove("visible");
+			}
+		}
+		function help(show)
+		{
+			if(!pauseVar)
+			{
+				let help = document.getElementById("help");
+				if(show)
+				{
+					help.classList.add("visible");
+					help.classList.remove("hidden");
+				}
+				else
+				{
+					help.classList.add("hidden");
+					help.classList.remove("visible");
+				}
+			}
+		}
+		function pause(show)
+		{
+		if(!pauseVar)
+		{
+			let paused = document.getElementById("pause");
+			if(show)
+			{
+				paused.classList.add("visible");
+				paused.classList.remove("hidden");
+			}
+			else
+			{
+				paused.classList.remove("visible");
+				paused.classList.add("hidden");
+			}
+		}
+	}
+	</script>
+</body>
+</html>
