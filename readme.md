@@ -2,7 +2,7 @@
 
 ## Multiplataform
 
-`Unfortunately this game is only available for computers: desktop or notebook. Perhaps, in some future version it will be possible to play on mobile.`
+Unfortunately this game is only available for computers: desktop or notebook. Perhaps, in some future version it will be possible to play on mobile.
 
 ## How to play?
 
