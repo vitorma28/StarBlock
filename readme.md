@@ -1,17 +1,17 @@
 # StarBlock
 
-## Multiplataforma
+## Multiplataform
 
-`Infelizmente esse jogo está disponível apenas para computadores: desktop ou notebook. Mas em algumas versões futuras seja possível jogar no celular.`
+`Unfortunately this game is only available for computers: desktop or notebook. Perhaps, in some future version it will be possible to play on mobile.`
 
-## Como jogar?
+## How to play?
 
-`O jogo contém um botão de ajuda para jogadores iniciantes ou jogadores de versões antigas, por isso, é recomendado ler todas as instruções do jogo.`
+`The game contains a help button for beginners or older players, so it is recommended that you read all in-game instructions.`
 
-## Como instalar?
+## How to install?
 
-`Esse repositório tem um pacote chamado: "StarBlock.zip", nesse arquivo estará todas as pastas e arquivos do jogo.`
+`This repository has a package called: "StarBlock.zip", in that file will be the game.`
 
-## Versão
+## Version
 
 `1.0.0`

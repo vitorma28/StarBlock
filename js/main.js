@@ -120,7 +120,7 @@ function loaded()
                     setTimeout(
                         () =>
                         {
-                            alert("Você perdeu!\n\nScore: " + score + "\nHordas suportadas: " + parseInt(wave) + "\nInimigos destruidos: " + parseInt(ed));
+                            alert("You lost!\n\nScore: " + score + "\nSupported hordes: " + parseInt(wave) + "\nEnemies destroyed: " + parseInt(ed));
                             location.reload();
                         },
                         1000
@@ -645,7 +645,7 @@ function loaded()
             }
             else
             {
-                alert("Você não tem dinheiro suficiente.")
+                alert("You do not have enough money.")
             }
         }
     );
@@ -662,7 +662,7 @@ function loaded()
             }
             else
             {
-                alert("Você não tem dinheiro suficiente.")
+                alert("You do not have enough money.")
             }
         }
     );
