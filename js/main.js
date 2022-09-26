@@ -496,48 +496,6 @@ function loaded()
     ship();
     let enemySpawn, asteroidSpawn, shootLoop;
 
-    document.addEventListener("keydown", eventKBD);
-
-    document.getElementById("unpause").addEventListener(
-        "click",
-        (click) =>
-        {
-            pauseVar = false;
-            pause(false);
-        }
-    );
-
-    document.addEventListener(
-        "keyup",
-        (key) =>
-        {
-            if(key.code == "ArrowUp" && armorSPh > 0 && !pauseVar)
-            {
-                armorSPh -= 1;
-                superPhase.innerHTML = armorSPh;
-                ship();
-                let b = new Bullet(x, y);
-                b.shootT2();
-            }
-            else if(key.code == "ArrowDown")
-            {
-                shooting = false;
-            }
-            else if(key.code == "KeyR")
-            {
-                if(repeatShoot)
-                {
-                    repeatShoot = false;
-                    clearInterval(shootLoop)
-                }
-                else
-                {
-                    repeatShoot = true;
-                    shootLoop = setInterval(shootRpt, 10)
-                }
-            }
-        }
-    );
     function shootRpt()
     {
         if(shooting)
@@ -620,8 +578,8 @@ function loaded()
         }
         else if(key.code == "KeyP" && !pauseVar)
         {
-            pause(true);
-            pauseVar = true;
+            pause();
+            pauseVar = (pauseVar) ? false : true;
         }
     }
 
@@ -632,6 +590,39 @@ function loaded()
     cash.innerHTML = `$${money.toFixed(2)}`;
     superPhase.innerHTML = armorSPh;
 
+    document.addEventListener("keydown", eventKBD);
+
+    document.addEventListener(
+        "keyup",
+        (key) =>
+        {
+            if(key.code == "ArrowUp" && armorSPh > 0 && !pauseVar)
+            {
+                armorSPh -= 1;
+                superPhase.innerHTML = armorSPh;
+                ship();
+                let b = new Bullet(x, y);
+                b.shootT2();
+            }
+            else if(key.code == "ArrowDown")
+            {
+                shooting = false;
+            }
+            else if(key.code == "KeyR")
+            {
+                if(repeatShoot)
+                {
+                    repeatShoot = false;
+                    clearInterval(shootLoop)
+                }
+                else
+                {
+                    repeatShoot = true;
+                    shootLoop = setInterval(shootRpt, 10)
+                }
+            }
+        }
+    );
     document.getElementById("health").addEventListener(
         "click",
         (click) =>
@@ -672,15 +663,27 @@ function loaded()
         {
             clearInterval(enemySpawn);
             clearInterval(asteroidSpawn);
+            pauseVar = false;
+            pause();
         }
     );
+    document.getElementById("unpause").addEventListener(
+        "click",
+        (click) =>
+        {
+            pauseVar = false;
+            pause();
+        }
+    );
+    document.getElementById("unhelp").addEventListener("click", function(e) {help()});
+    document.getElementById("unstore").addEventListener("click", function(e) {store()});
 
 
 }
-function store(show)
+function store()
 {
     let store_ = document.getElementById("store");
-    if(show)
+    if(store_.classList.contains("hidden"))
     {
         store_.classList.remove("hidden");
         store_.classList.add("visible");
@@ -691,37 +694,31 @@ function store(show)
         store_.classList.remove("visible");
     }
 }
-function help(show)
+function help()
 {
-    if(!pauseVar)
+    let help = document.getElementById("help");
+    if(help.classList.contains("hidden"))
     {
-        let help = document.getElementById("help");
-        if(show)
-        {
-            help.classList.add("visible");
-            help.classList.remove("hidden");
-        }
-        else
-        {
-            help.classList.add("hidden");
-            help.classList.remove("visible");
-        }
+        help.classList.add("visible");
+        help.classList.remove("hidden");
+    }
+    else
+    {
+        help.classList.add("hidden");
+        help.classList.remove("visible");
     }
 }
-function pause(show)
+function pause()
 {
-    if(!pauseVar)
+    let paused = document.getElementById("pause");
+    if(paused.classList.contains("hidden"))
     {
-        let paused = document.getElementById("pause");
-        if(show)
-        {
-            paused.classList.add("visible");
-            paused.classList.remove("hidden");
-        }
-        else
-        {
-            paused.classList.remove("visible");
-            paused.classList.add("hidden");
-        }
+        paused.classList.add("visible");
+        paused.classList.remove("hidden");
+    }
+    else
+    {
+        paused.classList.remove("visible");
+        paused.classList.add("hidden");
     }
 }

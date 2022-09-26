@@ -55,21 +55,21 @@
             </table>
             <button
                 onclick="
-                    store(true);
+                    store();
                 "
             >
                 Store
             </button>
             <button
                 onclick="
-                    help(true);
+                    help();
                 "
             >
                 Help
             </button>
         </div>
         <div id="help" class="hidden">
-            <button onclick="help(false);" class="leave">Leave</button>
+            <button class="leave" id="unhelp">Leave</button>
             <p>Click 'a' and 'd' or '&lArr;' and '&rArr;' to go left and right, respectively.</p>
             <p>Click 'e' to create 1 enemy (don't press and hold, just tap).</p>
             <p>Click 'p' to pause the game (also pauses the page).</p>
@@ -79,13 +79,12 @@
             <p>Click 'c' to clear the screen.</p>
             <p>Click 'r' to shoot flying and again to disable (requires more from the computer).</p>
             <br>
-            <br>
             <p>1 enemy destroyed = +5 credits, +10 score and +1 ship destroyed.</p>
             <p>1 asteroid destroyed = +7 credits, +15 score</p>
             <p>10 ships created = +1 horde</p>
         </div>
         <div id="store" class="hidden">
-            <button onclick="store(false);" class="leave">Leave</button>
+            <button class="leave" id="unstore">Leave</button>
             <table>
                 <tbody>
                     <tr>
