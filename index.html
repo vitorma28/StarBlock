@@ -8,7 +8,7 @@
     <script src="js/main.js" defer></script>
     <title translate="no">Star Block</title>
 </head>
-<body onload="loaded()">
+<body onload="loaded();">
     <main id="GameDisplay">
         <canvas id="game" width="600" height="600">
             <div>
@@ -53,20 +53,8 @@
                     <td id="superPhase"></td>
                 </tr>
             </table>
-            <button
-                onclick="
-                    store();
-                "
-            >
-                Store
-            </button>
-            <button
-                onclick="
-                    help();
-                "
-            >
-                Help
-            </button>
+            <button id="btnStore">Store</button>
+            <button id="btnHelp">Help</button>
         </div>
         <div id="help" class="hidden">
             <button class="leave" id="unhelp">Leave</button>
@@ -74,12 +62,12 @@
             <p>Click 'e' to create 1 enemy (don't press and hold, just tap).</p>
             <p>Click 'p' to pause the game (also pauses the page).</p>
             <p>Click 'i' to spawn enemies automatically (click only 1 time, takes 3s to start, spawns 1 every 3s).</p>
-            <p>Click and hold on '&dArr;' to activate the stage cannon.</p>
-            <p>Click 1 time on '&uArr;' to give 1 super shot.(only works when you have ammo).</p>
+            <p>Click and hold on '&dArr;' to activate the laser.</p>
+            <p>Click 1 time on '&uArr;' to shoot 1 super laser.(only works when you have ammo).</p>
             <p>Click 'c' to clear the screen.</p>
             <p>Click 'r' to shoot flying and again to disable (requires more from the computer).</p>
             <br>
-            <p>1 enemy destroyed = +5 credits, +10 score and +1 ship destroyed.</p>
+            <p>1 enemy destroyed = +5 credits, +10 score.</p>
             <p>1 asteroid destroyed = +7 credits, +15 score</p>
             <p>10 ships created = +1 horde</p>
         </div>
@@ -94,7 +82,7 @@
                         <td>Buy</td>
                     </tr>
                     <tr>
-                        <td>Super Phase Cannon Ammo</td>
+                        <td>Super laser Ammo</td>
                         <td>$25.00</td>
                         <td>5</td>
                         <td>

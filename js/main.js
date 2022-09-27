@@ -677,6 +677,8 @@ function loaded()
     );
     document.getElementById("unhelp").addEventListener("click", function(e) {help()});
     document.getElementById("unstore").addEventListener("click", function(e) {store()});
+    document.getElementById("btnHelp").addEventListener("click", function(e) {help()});
+    document.getElementById("btnStore").addEventListener("click", function(e) {store()});
 
 
 }

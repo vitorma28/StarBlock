@@ -10,8 +10,8 @@ The game contains a help button for beginners or older players, so it is recomme
 
 ## How to install?
 
-This repository has a package called: "StarBlock.zip", in that file will be the game.
+<a href="">Click here</a> to install the game.
 
 ## Version
 
-2.1.1
+2.2.0
