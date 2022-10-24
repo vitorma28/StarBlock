@@ -10,8 +10,8 @@ The game contains a help button for beginners or older players, so it is recomme
 
 ## How to install?
 
-<a href="./StarBlock.zip">Click here</a> to install the game.
+<a href="/vitorma28/StarBlock/raw/master/StarBlock.zip">Click here</a> to install the game.
 
 ## Version
 
-2.2.1
+2.2.1.1
