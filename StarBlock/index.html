@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="js/main.js" defer></script>
+    <title translate="no">Star Block</title>
+</head>
+<body onload="loaded();">
+    <main id="GameDisplay">
+        <canvas id="game" width="600" height="600">
+            <div>
+                <p>
+                    Unfortunately your browser does not support canvas, <br>
+                    element used to display the game, therefore it is not possible <br>
+                    load it.
+                </p>
+                <p>
+                    Please update your browser to be able to play.<br>
+                    <a href="https://www.google.com/intl/pt-BR/chrome/">Chrome</a><br>
+                    <a href="https://www.mozilla.org/en-BR/firefox/new/">FireFox</a><br>
+                    <a href="https://www.microsoft.com/en-us/edge">Microsoft Edge</a><br>
+                    <a href="https://www.opera.com/pt-br">Opera</a>
+                </p>
+            </div>
+        </canvas>
+        <div>
+            <table>
+                <tr>
+                    <td>Base Health:</td>
+                    <td id="heal"></td>
+                </tr>
+                <tr>
+                    <td>Score:</td>
+                    <td id="score"></td>
+                </tr>
+                <tr>
+                    <td>Horde:</td>
+                    <td id="wave"></td>
+                </tr>
+                <tr>
+                    <td>Spaceships destroyed:</td>
+                    <td id="ships_destroyed"></td>
+                </tr>
+                <tr>
+                    <td>Money:</td>
+                    <td id="cash"></td>
+                </tr>
+                <tr>
+                    <td>Super Phase:</td>
+                    <td id="superPhase"></td>
+                </tr>
+            </table>
+            <button id="btnStore">Store</button>
+            <button id="btnHelp">Help</button>
+        </div>
+        <div id="help" class="hidden">
+            <button class="leave" id="unhelp">Leave</button>
+            <p>Click 'a' and 'd' or '&lArr;' and '&rArr;' to go left and right, respectively.</p>
+            <p>Click 'e' to create 1 enemy (don't press and hold, just tap).</p>
+            <p>Click 'p' to pause the game (also pauses the page).</p>
+            <p>Click 'i' to spawn enemies automatically (click only 1 time, takes 3s to start, spawns 1 every 3s).</p>
+            <p>Click and hold on '&dArr;' to activate the laser.</p>
+            <p>Click 1 time on '&uArr;' to shoot 1 super laser.(only works when you have ammo).</p>
+            <p>Click 'c' to clear the screen.</p>
+            <p>Click 'r' to shoot flying and again to disable (requires more from the computer).</p>
+            <br>
+            <p>1 enemy destroyed = +5 credits, +10 score.</p>
+            <p>1 asteroid destroyed = +7 credits, +15 score</p>
+            <p>10 ships created = +1 horde</p>
+        </div>
+        <div id="store" class="hidden">
+            <button class="leave" id="unstore">Leave</button>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>Product</td>
+                        <td>Price</td>
+                        <td>Amount per purchase</td>
+                        <td>Buy</td>
+                    </tr>
+                    <tr>
+                        <td>Super laser Ammo</td>
+                        <td>$25.00</td>
+                        <td>5</td>
+                        <td>
+                            <button id="armorPhase">Buy</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Health</td>
+                        <td>$10.00</td>
+                        <td>20</td>
+                        <td>
+                            <button id="health">Buy</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="pause" class="hidden">
+            <div
+                style="
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                "
+            >
+                <h3>The game is paused.</h3>
+                <br>
+                <button id="stopShipSpawn">Pause ship and asteroid creation?(click to yes)</button>
+                <button
+                    class="leave"
+                    id="unpause"
+                    style="
+                        margin-top: 100px;
+                    "
+                >
+                    Resume
+                </button>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

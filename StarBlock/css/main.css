@@ -1,0 +1,52 @@
+:root {
+    --width-store-: 500px;
+    --height-store-: 400px;
+}
+html {
+    height: 100vh;
+}
+canvas {
+    border: 2px solid gray;
+    background-color: rgb(0, 0, 15);
+    background-image: url("../img/estrelas.jpg");
+}
+td {
+    border: 1px solid black;
+    padding: 3px;
+}
+#GameDisplay {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.hidden {
+    display: none;
+}
+.visible {
+    display: block;
+    background-color: #fff;
+    border: 1px solid #aaa;
+    position: absolute;
+}
+#store {
+    width: 570px;
+    height: calc(100% - 5px);
+    left: 0;
+    top: 0;
+}
+#help {
+    left: 0;
+    top: 0;
+    width: 500px;
+    height: calc(100% - 5px);
+}
+#pause {
+    width: 300px;
+    height: 250px;
+    top: calc(100% / 2 - 125px);
+    left: calc(100% / 2 - 150px);
+}
+.leave {
+    width: 100%;
+}

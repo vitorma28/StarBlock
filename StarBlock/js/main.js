@@ -265,7 +265,7 @@ function loaded()
             setTimeout(
                 () =>
                 {
-                    let animation = setTimeout(animat, 150), frame = 1;
+                    let animation = setTimeout(animat, 150), frame = 1;// frame min: 1 e max: 4
 
                     function animat()
                     {
@@ -440,7 +440,7 @@ function loaded()
             setTimeout(
                 () =>
                 {
-                    let animation = setTimeout(animat, 150), frame = 1;
+                    let animation = setTimeout(animat, 150), frame = 1;// frame min: 1 e max: 4
 
                     function animat()
                     {
